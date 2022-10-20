@@ -35,7 +35,7 @@
 
   <body>
     <!-- This is a template HTML for a post item -->
-    <template id="postItemTemplate">
+    <template id="postTemplate">
       <li class="col-12 col-md-6 col-lg-4">
         <div class="post-item mb-4">
           <div class="card">
@@ -122,13 +122,13 @@
 
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img src="https://picsum.photos/id/1002/4312/2868" class="w-100" alt="bau troi">
+            <img src="https://picsum.photos/id/1002/4312/2868" class="d-block w-100" alt="bau troi">
           </div>
           <div class="carousel-item">
-            <img src="https://picsum.photos/id/1005/5760/3840" class="w-100" alt="bau troi">
+            <img src="https://picsum.photos/id/1005/5760/3840" class="d-block w-100" alt="bau troi">
           </div>
           <div class="carousel-item">
-            <img src="https://picsum.photos/id/1011/5472/3648" class="w-100" alt="bau troi">
+            <img src="https://picsum.photos/id/1011/5472/3648" class="d-block w-100" alt="bau troi">
           </div>
         </div>
 
@@ -149,8 +149,8 @@
           <h1 class="with-underline text-center">Latest posts</h1>
 
           <!-- Posts list -->
-          <ul id="postsList" class="row posts-list justify-content-center">
-            <li class="col-12 col-md-6 col-lg-4">
+          <ul id="postList" class="row posts-list justify-content-center">
+            <!-- <li class="col-12 col-md-6 col-lg-4">
               <div class="post-item mb-4">
                 <div class="card">
                   <img
@@ -188,7 +188,7 @@
                   </div>
                 </div>
               </div>
-            </li>
+            </li> -->
           </ul>
 
           <!-- Posts pagination -->
@@ -227,6 +227,6 @@
     crossorigin="anonymous"></script>
 
     <!-- Scripts should be placed here to prevent blocking render UI -->
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/home.js"></script>
   </body>
 </html>
