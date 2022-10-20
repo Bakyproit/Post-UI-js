@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-   baseURL : 'http://js-post-api.herokuapp.com/api' ,
+   baseURL : 'https://js-post-api.herokuapp.com/api' ,
    headers : {
     'content-Type' : 'application/json' ,
    },
