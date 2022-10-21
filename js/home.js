@@ -16,29 +16,17 @@ function createPostElement(post){
     const liElement = postTemplate.content.firstElementChild.cloneNode(true) ;
     if(!liElement) return ;
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     // update  title , description author thumbnail
     // const titleElement = liElement.querySelector('[data-id = "title"]') ;
     // if(titleElement) titleElement.textContent = post.title ;
 
     setTextContent(liElement ,'[data-id = "title"]' , post.title) ;
     // description
-<<<<<<< Updated upstream
-    // const descriptionElement = liElement.querySelector('[data-id = "description"]') ;
-    // if(descriptionElement) descriptionElement.textContent = post.description ;
-
     setTextContent(liElement ,'[data-id = "description"]' ,truncateText(post.description,100)) ; ;
     //author
-    // const authorElement = liElement.querySelector('[data-id = "author"]') ;
-    // if(authorElement) authorElement.textContent = post.author ;
-=======
     
     setTextContent(liElement ,'[data-id = "description"]' ,truncateText(post.description,100)) ; ;
     //author
->>>>>>> Stashed changes
 
     setTextContent(liElement ,'[data-id = "author"]' ,post.author)
     
@@ -75,20 +63,12 @@ function renderPostList(postList){
 ( async () =>{
     try{
         const queryParams = {
-<<<<<<< Updated upstream
-            _page : 1,
-=======
             _page : 6,
->>>>>>> Stashed changes
             _limit : 6,
         }
         const {data , pagination} = await postApi.getAll(queryParams) ;
         renderPostList(data) ;
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
        }catch(error){
          console.log('get all failed' , error) ;
          // show toast
