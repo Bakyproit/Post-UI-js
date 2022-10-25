@@ -8,3 +8,7 @@ export function getPostList(){
 export function getPostTemplate(){
     return document.getElementById('postTemplate') ;
 }
+
+export function getSearchInput(){
+    return document.getElementById('searchInput') ;
+}
