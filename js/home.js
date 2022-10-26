@@ -46,7 +46,7 @@ function getDefaultParams(){
             defaultParams : queryParams ,
             onchange : value => handleFilterChange('title_like' , value),
         }) ;
-
+        // goi api
         const {data , pagination} = await postApi.getAll(queryParams) ;
         renderPostList(data) ;
         renderPagination('pagination',pagination);
