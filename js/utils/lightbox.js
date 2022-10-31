@@ -1,5 +1,4 @@
 function showModal(modalElement){
-
    const modal = new window.bootstrap.Modal(modalElement) ;
    if(modal) modal.show();
 }
@@ -38,7 +37,7 @@ export function registerLightBox({modalId ,imgSelector ,prevSelector ,nextSelect
        
        showImageAtIndex(currentIndex) ;
        showModal(modalElement) ;
-    //    console.log('album image album ' , {target ,currentIndex , imgList}) ;
+    //  console.log('album image album ' , {target ,currentIndex , imgList}) ;
     });
     // handle prev / next click
     prevButton.addEventListener('click' , () => {

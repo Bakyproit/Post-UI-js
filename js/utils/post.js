@@ -15,13 +15,10 @@ export function createPostElement(post){
     if(!liElement) return ;
 
     // update  title , description author thumbnail
-    // const titleElement = liElement.querySelector('[data-id = "title"]') ;
-    // if(titleElement) titleElement.textContent = post.title ;
+   
 
     setTextContent(liElement ,'[data-id = "title"]' , truncateText(post.title ,15)) ;
-    // description
     setTextContent(liElement ,'[data-id = "description"]' ,truncateText(post.description,100)) ; 
-    //author
     setTextContent(liElement ,'[data-id = "author"]' ,post.author)
     
     // calculate timeSpan
@@ -41,9 +38,21 @@ export function createPostElement(post){
     // go to post detail when click on div.post-item
     const divElement = liElement.firstElementChild ; 
     if(divElement){
-        divElement.addEventListener('click' , () => {
+        divElement.addEventListener('click' , (event) => {
+            // if event is triggered from menu => ignore
+            const menu = liElement.querySelector('[data-id="menu"]') ;
+            if(menu && menu.contains(event.target)) return ;
+
             window.location.assign(`/post-detail.html?id=${post.id}`) ;
         })
+    }
+    // ADD CLICK event for edit button
+    const editButton = liElement.querySelector('[data-id="edit"]') ;
+    if(editButton){
+        editButton.addEventListener('click' ,(e) => {
+        //    e.stopPropagation() ;
+           window.location.assign(`/add-edit-post.html?id=${post.id}`) ;
+        });
     }
 
     return liElement ;

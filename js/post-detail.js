@@ -5,13 +5,10 @@ import {registerLightBox} from './utils' ;
 
 function renderPostDetail(post){
     if(!post) return
-    // render title
+    // render 
     setTextContent(document , '#postDetailTitle' ,post.title) ;
-    // render description
     setTextContent(document , '#postDetailDescription' ,post.description)  ;
-    //render author
     setTextContent(document , '#postDetailAuthor' ,post.author) ;
-    // render updateAt
     setTextContent(document , '#postDetailTimeSpan' , dayjs(post.updateAt).format(' - DD/MM/YYYY HH:mm')) ; ;
     // render hero image(imageUrl)
     const heroImage = document.getElementById('postHeroImage') ;
@@ -52,5 +49,4 @@ function renderPostDetail(post){
     } catch (error) {
         console.log('failed to fetch post detail ', error) ;
     }
-
 })();
