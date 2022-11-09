@@ -13,9 +13,9 @@ async function handlePostFormSubmit(formValues){
       : await postApi.add(formValues) ;
 
       toast.success('Submit post successfully!') ;
-      // setTimeout(() => {
-      //    window.location.assign(`/post-detail.html?id=${savePost.id}`) ;
-      // },2000) ;
+      setTimeout(() => {
+         window.location.assign(`/post-detail.html?id=${savePost.id}`) ;
+      },2000) ;
          
    } catch (error) {
       console.log('Failed to save post' , error) ;

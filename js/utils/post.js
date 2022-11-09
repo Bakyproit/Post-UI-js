@@ -18,7 +18,7 @@ export function createPostElement(post){
    
 
     setTextContent(liElement ,'[data-id = "title"]' , truncateText(post.title ,15)) ;
-    setTextContent(liElement ,'[data-id = "description"]' ,truncateText(post.description,100)) ; 
+    setTextContent(liElement ,'[data-id = "description"]' ,truncateText(post.description,90)) ; 
     setTextContent(liElement ,'[data-id = "author"]' ,post.author)
     
     // calculate timeSpan
