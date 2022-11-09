@@ -1,5 +1,11 @@
 import { randomNumber, setBackgroundImage, setFieldValue, setTextContent } from './common' ;
 import * as yup from 'yup' ;
+
+
+const ImageSource ={
+   PICSUM :'picsum',
+   UPLOAD :'upload',
+}
 // set du lieu cho form
 function setFromValues(form , formValues){
    setFieldValue(form , '[name="title"]' , formValues?.title) ;
@@ -36,9 +42,26 @@ function getPostSchema(){
               .test('at-least-two-words' , 'please enter at least two words',
               (value) => value.split(' ').filter((x) => !!x && x.length >= 2).length >= 2),
       description: yup.string() ,
-      imageUrl: yub.string()
-                .required('Please random a background image')
-                .url('please enter a valid URL'),
+      imageSource: yup.string()
+                  .required('Please select an image source')
+                  .oneOf([ImageSource.PICSUM , ImageSource.UPLOAD],'Invalid image source'),
+      imageUrl: yup.string()
+                .when('imageSource',{
+                  is:ImageSource.PICSUM,
+                  then:yup.string()
+                  .required('Please random a background image')
+                  .url('please enter a valid URL'),
+                }), 
+      image: yup.mixed().when('imageSource', {
+               is   : ImageSource.UPLOAD ,
+               then : yup.mixed()
+                .test('required' ,'Please select an image to upload', (value) => Boolean(value?.name))
+                .test('max-mb' , 'The image is too large' , (file) => {
+                  const fileSize = file?.size || 0 ; 
+                  const MAX_SIZE = 1000 * 1024 *1024 ;
+                  return fileSize <= MAX_SIZE ;
+                }) ,
+            }),
     }) ;
 }
 
@@ -54,7 +77,7 @@ function setFieldError(form , name , error){
 async function validatePostFrom(form , formValues){
    try {
     // reset previous error
-    ['title' , 'author','imageUrl' ].forEach(name => setFieldError(form ,name ,'')) ;
+    ['title' , 'author','imageUrl','image'].forEach(name => setFieldError(form ,name ,'')) ;
 
     const schema = getPostSchema() ;
     await schema.validate(formValues , { abortEarly : false}) ;
@@ -81,6 +104,24 @@ async function validatePostFrom(form , formValues){
 
    return isValid ;
 }
+
+// 
+async function validateFormField(form , formValues , name){
+   try {
+      //clear error
+      setFieldError(form , name , '')
+
+      const schema = getPostSchema() ;
+      await schema.validateAt(name , formValues) ;
+   } catch (error) {
+      setFieldError(form , name, error.message ) ;
+   }
+   const field = form.querySelector(`[name="${name}"]`);
+   if(field && field.checkValidity()) {
+       field.parentElement.classList.add('was-validated');
+   }
+}
+
 function initRandomImage(form){
    const randomButton = document.getElementById('postChangeImage') ;
    if(!randomButton) return ;
@@ -111,6 +152,42 @@ function initRadioImageSource(form){
    });
 }
 
+function initUploadImage(form){
+   const uploadImage = form.querySelector('[name="image"]') ;
+   if(!uploadImage) return ;
+
+   uploadImage.addEventListener('change' , event =>{
+      const file = event.target.files[0] ;
+      if(file) {
+         const imageUrl = URL.createObjectURL(file) ;
+         // setFieldValue(form , '[name="imageUrl"]' , file) ;
+         setBackgroundImage(document , "#postHeroImage" , imageUrl) ;
+
+         // trigger validate of upload
+         validateFormField(
+            form , 
+            {
+               imageSource: ImageSource.UPLOAD , 
+               image : file ,
+            } ,
+            'image') ;
+      }
+   });
+
+}
+
+function initValidationOnchange(form){
+   ['title' ,'author'].forEach(name =>{
+      const field = form.querySelector(`[name="${name}"]`)
+      if(field) {
+         field.addEventListener('input' , (event) => {
+            const newValue = event.target.value ;
+
+            validateFormField(form , { [name] : newValue} , name)
+         })
+      }
+   })
+}
 
 export function initPostForm({formId , defaultValues , onSubmit}){
     const form = document.getElementById(formId) ;
@@ -122,6 +199,9 @@ export function initPostForm({formId , defaultValues , onSubmit}){
     // init event
     initRandomImage(form) ;
     initRadioImageSource(form) ;
+    initUploadImage(form) ;
+
+    initValidationOnchange(form) ;
 
     
     form.addEventListener('submit' , async (event) => {
@@ -133,12 +213,10 @@ export function initPostForm({formId , defaultValues , onSubmit}){
 
        // get form values
        const formValues = getFormValues(form) ;
-       console.log(formValues) ;
        formValues.id = defaultValues.id ;
        // validation
        const isValid = await validatePostFrom(form , formValues) ;
        if(isValid) await onSubmit?.(formValues) ;     
-       submitting = false ;
-  
+       submitting = false ; 
     });
 }

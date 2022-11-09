@@ -1,11 +1,13 @@
 import postApi from "./api/postApi";
-import {initPagination ,initSearch,renderPagination ,renderPostList} from './utils' ;
+import {initPagination ,initSearch,renderPagination ,renderPostList, toast} from './utils' ;
 
 async function handleFilterChange(filterName , filterValue){
    try {
      // update query params
      const url = new URL(window.location) ;
-     url.searchParams.set(filterName , filterValue) ;
+
+     if(filterName) url.searchParams.set(filterName , filterValue) ;
+     
      // reset page
      if(filterName === 'title_like') url.searchParams.set('_page' , 1) ;
 
@@ -30,10 +32,32 @@ function getDefaultParams(){
     return url.searchParams ;
 }
 
+function registerPostDeleteEvent(){
+    document.addEventListener('post-delete' , async (event) => {
+
+       try {
+         
+         const post = event.detail ;
+         const message = `Are you sure to remove post "${post.title}" ?` ;
+         if(window.confirm(message)){
+            await postApi.remove(post.id) ;  
+            await handleFilterChange() ;
+            
+            toast.success('remove post successfully');
+         }
+
+       } catch (error) {
+         console.log('failed to remove post' , error) ;
+         toast.error(error.message) ;
+       }
+    });
+}
+
 ( async () =>{
     try{
         // params
         const queryParams = getDefaultParams() ;
+
         //pagination
         initPagination({
             elementId : 'pagination' ,
@@ -46,10 +70,9 @@ function getDefaultParams(){
             defaultParams : queryParams ,
             onchange : value => handleFilterChange('title_like' , value),
         }) ;
-        // goi api
-        const {data , pagination} = await postApi.getAll(queryParams) ;
-        renderPostList(data) ;
-        renderPagination('pagination',pagination);
+        
+         registerPostDeleteEvent() ;
+         handleFilterChange() ;
     }catch(error){
          console.log('get all failed' , error) ;
          // show modal . toast error

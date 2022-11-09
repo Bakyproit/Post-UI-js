@@ -1,16 +1,44 @@
 import postApi from "./api/postApi";
 import { initPostForm, toast } from "./utils" ;
 
+function removeUnusedFields(formValues){
+   const payload = {...formValues} ;
+   
+   if(payload.imageSource === "upload"){
+      delete payload.imageUrl ;
+   }else{
+      delete payload.image ;
+   }
+   delete payload.imageSource ;
+
+   if(!payload.id) delete payload.id ;
+    
+   return payload ;
+}
+
+function jsonToFormData(jsonObject){
+   const formData = new FormData() ;
+   for (const key in jsonObject) {
+     formData.set(key , jsonObject[key]) ;
+   }
+   return formData ;
+}
+
+
 async function handlePostFormSubmit(formValues){
-    try {
+
+   const payload = removeUnusedFields(formValues) ;
+   
+   const formData = jsonToFormData(payload) ;
+   try {
       // check add / edit
       // call API
       // show success message
       // redirect to detail page
       
       const savePost = formValues.id 
-      ? await postApi.update(formValues) 
-      : await postApi.add(formValues) ;
+      ? await postApi.updateFromData(formData)
+      : await postApi.addFromData(formData) ;
 
       toast.success('Submit post successfully!') ;
       setTimeout(() => {
@@ -45,5 +73,4 @@ async function handlePostFormSubmit(formValues){
    } catch (error) {
       console.log('failed to fetch details :' . error) ;
    }
-
 })();

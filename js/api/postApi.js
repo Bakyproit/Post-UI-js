@@ -21,12 +21,21 @@ const postApi = {
     return axiosClient.patch(url , data) ;
    },
 
-   updateFromData(data){
-    const url = `/posts/${data.id}` ;
-    return axiosClient.patch(url , data ) ;
+   addFromData(data){
+      const url = '/with-thumbnail/posts' ;
+      return axiosClient.post(url , data , {
+         headers : {'Content-Type' : 'multipart/form-data'} ,
+      });
    },
 
-   remove(){
+   updateFromData(data){
+      const url = `/with-thumbnail/posts/${data.get('id')}` ;
+      return axiosClient.patch(url , data , {
+         headers : {'Content-Type' : 'multipart/form-data'} ,
+      });
+   },
+
+   remove(id){
     const url =`/posts/${id}` ;
     return axiosClient.delete(url) ;
    } ,
